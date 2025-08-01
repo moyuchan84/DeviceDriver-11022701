@@ -37,4 +37,24 @@ def test_read_failure(mocker: MockerFixture,lst):
         dd.read(0x5E)
 
 def test_read_once_when_write(mocker: MockerFixture):
-    ...
+    hw = mocker.Mock(spec=FlashMemoryDevice)
+    hw.read.return_value = 0xFF
+    dd = DeviceDriver(hw)
+    dd.write(0x5E,13)
+    assert hw.read.call_count == 1
+
+
+def test_exist_data_when_write(mocker: MockerFixture):
+    hw = mocker.Mock(spec=FlashMemoryDevice)
+    hw.read.return_value = 0xAA
+    dd = DeviceDriver(hw)
+    with pytest.raises(Exception):
+        dd.write(0x5E, 13)
+
+
+def test_write_once_when_no_data(mocker: MockerFixture):
+    hw = mocker.Mock(spec=FlashMemoryDevice)
+    hw.read.return_value = 0xFF
+    dd = DeviceDriver(hw)
+    dd.write(0x5E, 13)
+    assert hw.write.call_count == 1

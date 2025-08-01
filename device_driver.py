@@ -14,7 +14,11 @@ class DeviceDriver:
 
     def write(self, address: int, data: int) -> None:
         # TODO: implement this method
-        pass
+        ret = self._device.read(address)
+        if ret != 0xFF:
+            raise Exception()
+        self._device.write(address,data)
+
 
     def read(self, address: int) -> int:
         ret = self._device.read(address)
