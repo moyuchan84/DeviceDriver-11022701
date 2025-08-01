@@ -1,5 +1,6 @@
 from hardware_interface import FlashMemoryDevice
 
+
 class DeviceDriver:
     """
     This class is used by the operating system to interact with the hardware 'FlashMemoryDevice'.
@@ -9,12 +10,15 @@ class DeviceDriver:
         """
         :type device: hardware_interface.FlashMemoryDevice
         """
-        self.__device = device
+        self._device = device
 
     def write(self, address: int, data: int) -> None:
         # TODO: implement this method
         pass
 
     def read(self, address: int) -> int:
-        # TODO: implement this method
-        return 0
+        ret = self._device.read(address)
+        for i in range(4):
+            if self._device.read(address) != ret:
+                raise Exception()
+        return ret
