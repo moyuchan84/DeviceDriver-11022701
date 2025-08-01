@@ -1,6 +1,7 @@
 import pytest
 from pytest_mock import MockerFixture
 
+from app import Application
 from device_driver import DeviceDriver
 from hardware_interface import FlashMemoryDevice
 
@@ -58,3 +59,12 @@ def test_write_once_when_no_data(mocker: MockerFixture):
     dd = DeviceDriver(hw)
     dd.write(0x5E, 13)
     assert hw.write.call_count == 1
+
+
+def test_app_read_operation(mocker: MockerFixture):
+    hw = mocker.Mock(spec=FlashMemoryDevice)
+    hw.read.return_value = 0xFF
+    dd = DeviceDriver(hw)
+    app =Application(dd)
+    app.read_and_print(0,5)
+    assert hw.read.call_count > 0
